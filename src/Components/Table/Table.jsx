@@ -3,10 +3,13 @@ import { Table, Space } from "antd";
 import { FiEdit } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import EditModal from "../EditModal";
 
 const MyTable = ({ data }) => {
   const [userData, setUserData] = useState();
   const [wholedata, setWholeData] = useState();
+  const [editModal, setEditModal] = useState(false);
+  const [recordData, setRecordData] = useState();
   useEffect(() => {
     setUserData(data);
     setWholeData(data);
@@ -99,6 +102,11 @@ const MyTable = ({ data }) => {
     setWholeData(newDataSource);
   };
 
+  const toggleedit = (record) => {
+    setRecordData(record);
+    setEditModal(true);
+  };
+
   const columns = [
     {
       title: "Name",
@@ -118,7 +126,11 @@ const MyTable = ({ data }) => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <FiEdit size={20} color="black" />
+            <FiEdit
+              onClick={() => toggleedit(record)}
+              size={20}
+              color="black"
+            />
           </a>
           <a>
             <MdOutlineDelete
@@ -134,6 +146,17 @@ const MyTable = ({ data }) => {
 
   return (
     <>
+      {editModal ? (
+        <EditModal
+          isopen={editModal}
+          setIsopen={setEditModal}
+          data={recordData}
+          fullData={userData}
+          setUserData={setUserData}
+        />
+      ) : (
+        ""
+      )}
       {selectedRowKeys.length ? (
         <a>
           <MdDelete
